@@ -1,1 +1,2 @@
-
+id,date,dow,opponent,opponentType,opponentCustom,stance,stadium,stadiumType,stadiumCustom,cancel,scoreMyTeam,scoreOpponent,comment,satisfaction
+1777203298444,2026-04-26,日曜日,横浜DeNAベイスターズ,横浜DeNAベイスターズ,,ビジター,横浜スタジアム,横浜スタジアム,,false,5,10,かない,4
