@@ -666,9 +666,13 @@
     renderPie('chart-top-home', homeWLDC);
     renderPie('chart-top-visitor', visitorWLDC);
 
-    document.getElementById('top-overall-stats').innerHTML = `<span style="color:var(--win)">${overallWLDC[0]}W</span> <span style="color:var(--lose)">${overallWLDC[1]}L</span> <span style="color:var(--draw)">${overallWLDC[2]}D</span>`;
-    document.getElementById('top-home-stats').innerHTML = `<span style="color:var(--win)">${homeWLDC[0]}W</span> <span style="color:var(--lose)">${homeWLDC[1]}L</span> <span style="color:var(--draw)">${homeWLDC[2]}D</span>`;
-    document.getElementById('top-visitor-stats').innerHTML = `<span style="color:var(--win)">${visitorWLDC[0]}W</span> <span style="color:var(--lose)">${visitorWLDC[1]}L</span> <span style="color:var(--draw)">${visitorWLDC[2]}D</span>`;
+    const overallStatsEl = document.getElementById('top-overall-stats');
+    const homeStatsEl = document.getElementById('top-home-stats');
+    const visitorStatsEl = document.getElementById('top-visitor-stats');
+    
+    if (overallStatsEl) overallStatsEl.innerHTML = `<span style="color:var(--win)">${overallWLDC[0]}W</span> <span style="color:var(--lose)">${overallWLDC[1]}L</span> <span style="color:var(--draw)">${overallWLDC[2]}D</span>`;
+    if (homeStatsEl) homeStatsEl.innerHTML = `<span style="color:var(--win)">${homeWLDC[0]}W</span> <span style="color:var(--lose)">${homeWLDC[1]}L</span> <span style="color:var(--draw)">${homeWLDC[2]}D</span>`;
+    if (visitorStatsEl) visitorStatsEl.innerHTML = `<span style="color:var(--win)">${visitorWLDC[0]}W</span> <span style="color:var(--lose)">${visitorWLDC[1]}L</span> <span style="color:var(--draw)">${visitorWLDC[2]}D</span>`;
 
     const recent = [...records].sort((a,b) => b.date.localeCompare(a.date)).slice(0, 5);
     document.getElementById('top-recent-list').innerHTML = recent.map(r => {
@@ -774,8 +778,14 @@
         scales: { 
           y: { 
             grid: { 
-              color: (context) => context.tick.value === 0 ? 'rgba(251, 191, 36, 0.8)' : 'rgba(255,255,255,0.05)',
-              lineWidth: (context) => context.tick.value === 0 ? 2 : 1
+              color: (context) => {
+                if (context.tick && context.tick.value === 0) return 'rgba(251, 191, 36, 0.8)';
+                return 'rgba(255,255,255,0.05)';
+              },
+              lineWidth: (context) => {
+                if (context.tick && context.tick.value === 0) return 3;
+                return 1;
+              }
             }, 
             ticks: { color: '#94a3b8' } 
           },
