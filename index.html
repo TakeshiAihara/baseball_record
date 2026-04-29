@@ -264,7 +264,7 @@
   <button class="tab-btn active" onclick="switchTab('top')">TOP</button>
   <button class="tab-btn" onclick="switchTab('record')">記録</button>
   <button class="tab-btn" onclick="switchTab('stats')">統計</button>
-  <button class="tab-btn" onclick="switchTab('detail')">試合詳細</button>
+  <button class="tab-btn" onclick="switchTab('detail')">詳細</button>
 </nav>
 
 <main>
@@ -412,6 +412,20 @@
     <div class="card">
       <div class="card-title">DAY OF WEEK STATS</div>
       <div class="chart-container" style="height:400px"><canvas id="chart-dow-combined"></canvas></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">TEAM STATS</div>
+      <div class="stadium-grid">
+        <div class="stadium-table-card">
+          <h4>CENTRAL LEAGUE</h4>
+          <div class="table-wrap"><table><thead><tr><th>TEAM</th><th>G</th><th>W</th><th>L</th><th>D</th><th>%</th></tr></thead><tbody id="team-tbody-central"></tbody></table></div>
+        </div>
+        <div class="stadium-table-card">
+          <h4>PACIFIC LEAGUE</h4>
+          <div class="table-wrap"><table><thead><tr><th>TEAM</th><th>G</th><th>W</th><th>L</th><th>D</th><th>%</th></tr></thead><tbody id="team-tbody-pacific"></tbody></table></div>
+        </div>
+      </div>
     </div>
 
     <div class="card">
@@ -716,9 +730,27 @@
     renderTrend(records);
     renderYearly(records);
     renderDowCombined(records);
+    renderTeams(records);
     renderStadiums(records);
     renderStreaks(records);
     renderBestWorst(records);
+  }
+
+  function renderTeams(records) {
+    const central = ["読売ジャイアンツ", "阪神タイガース", "横浜DeNAベイスターズ", "広島東洋カープ", "中日ドラゴンズ", "東京ヤクルトスワローズ"];
+    const pacific = ["福岡ソフトバンクホークス", "オリックス・バファローズ", "千葉ロッテマリーンズ", "東北楽天ゴールデンイーグルス", "埼玉西武ライオンズ", "北海道日本ハムファイターズ"];
+
+    const getRows = (list) => list.map(name => {
+      const recs = records.filter(r => r.opponent === name);
+      const w = recs.filter(r => getResult(r) === '勝').length;
+      const l = recs.filter(r => getResult(r) === '負').length;
+      const d = recs.filter(r => getResult(r) === '引き分け').length;
+      const wr = (w + l > 0) ? (w / (w + l)).toFixed(3) : '.000';
+      return `<tr><td>${name}</td><td>${recs.length}</td><td>${w}</td><td>${l}</td><td>${d}</td><td>${wr}</td></tr>`;
+    }).join('');
+
+    document.getElementById('team-tbody-central').innerHTML = getRows(central);
+    document.getElementById('team-tbody-pacific').innerHTML = getRows(pacific);
   }
 
   function renderStreaks(records) {
